@@ -18,7 +18,8 @@ A custom GitHub Action to [generate a GitHub app token](https://docs.github.com/
 | Name | Description | Required | Notes |
 |---|---|---|---|
 | `application_private_key` | A base64 encoded string of the [`application private key](https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#generating-a-private-key) PEM file | **Yes** | This should be saved as [an encrypted secret](https://docs.github.com/en/actions/security-guides/encrypted-secrets) |
-| `github_org` | The GitHub org to authenticate the app against | **Yes** | Defaults to the GitHub org of the workflow run |
+| `application_id` | The GitHub App ID | **Yes** |  |
+
 ## Outputs
 
 | Name | Description |

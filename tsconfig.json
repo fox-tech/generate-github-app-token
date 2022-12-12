@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2019"],
+    "module": "commonjs",
+    "target": "ES2019",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": true,
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "moduleResolution": "node"
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "lib", "dist", ".github/actions"]
+}

@@ -1,0 +1,19 @@
+name: 'Fox Tech Generate GitHub App Token'
+description: 'A custom GitHub Action to generate a GitHub app token.'
+inputs:
+  application_private_key:
+    description: 'A base64 encoded string of the application private key PEM file.'
+    required: true
+  github_org:
+    description: 'The GitHub org to authenticate the app against.'
+    required: false
+    default: ''
+outputs:
+  token:
+    description: 'The generated JSON Web Token (JWT)'
+runs:
+  using: node16
+  main: 'dist/index.js'
+branding:
+  icon: lock
+  color: green

@@ -17,12 +17,8 @@ const fullRepoName = process.env.GITHUB_REPOSITORY || 'foxcorp/generate-github-a
 const [owner, repo] = fullRepoName.split('/')
 const isGitHubActions = 'GITHUB_ACTIONS' in process.env
 
-const appPrivateKeyInput: string = core.getInput('application_private_key', {required: isGitHubActions}) || ''
-const appId: string = core.getInput('application_id', {required: isGitHubActions}) || ''
-
-if (areTesting) {
-  process.env.GITHUB_ACTION = 'true'
-}
+const appPrivateKeyInput: string = core.getInput('application_private_key') || ''
+const appId: string = core.getInput('application_id') || ''
 
 /**
  * Export
@@ -37,4 +33,5 @@ export default {
   owner,
   repo,
   appId,
+  areTesting,
 }

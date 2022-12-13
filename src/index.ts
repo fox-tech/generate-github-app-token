@@ -6,7 +6,7 @@ import {decodePrivateKey} from './decodePrivateKey'
 const {core, appPrivateKeyInput, appId} = constants
 
 // https://github.com/JasonEtco/actions-toolkit
-async function run(): Promise<void> {
+export async function run(): Promise<void> {
   let token = ''
   let appPrivateKey: string
   let appAuth
@@ -32,10 +32,14 @@ async function run(): Promise<void> {
 
     core.info('Successfully generated a token! It has been saved as the output "token"')
     core.setOutput('token', token)
-  } catch (err) {
-    failAndExit(
-      'Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.',
-    )
+  } catch (error) {
+    let errorMessage =
+      'Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.'
+    if (error instanceof Error) {
+      errorMessage += error.message
+    }
+    failAndExit(errorMessage)
+    throw new Error(errorMessage)
   }
 }
 

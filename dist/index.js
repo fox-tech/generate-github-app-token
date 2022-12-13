@@ -3843,125 +3843,6 @@ exports.Deprecation = Deprecation;
 
 /***/ }),
 
-/***/ 2437:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const fs = __nccwpck_require__(7147)
-const path = __nccwpck_require__(4822)
-const os = __nccwpck_require__(2037)
-const packageJson = __nccwpck_require__(9968)
-
-const version = packageJson.version
-
-const LINE = /(?:^|^)\s*(?:export\s+)?([\w.-]+)(?:\s*=\s*?|:\s+?)(\s*'(?:\\'|[^'])*'|\s*"(?:\\"|[^"])*"|\s*`(?:\\`|[^`])*`|[^#\r\n]+)?\s*(?:#.*)?(?:$|$)/mg
-
-// Parser src into an Object
-function parse (src) {
-  const obj = {}
-
-  // Convert buffer to string
-  let lines = src.toString()
-
-  // Convert line breaks to same format
-  lines = lines.replace(/\r\n?/mg, '\n')
-
-  let match
-  while ((match = LINE.exec(lines)) != null) {
-    const key = match[1]
-
-    // Default undefined or null to empty string
-    let value = (match[2] || '')
-
-    // Remove whitespace
-    value = value.trim()
-
-    // Check if double quoted
-    const maybeQuote = value[0]
-
-    // Remove surrounding quotes
-    value = value.replace(/^(['"`])([\s\S]*)\1$/mg, '$2')
-
-    // Expand newlines if double quoted
-    if (maybeQuote === '"') {
-      value = value.replace(/\\n/g, '\n')
-      value = value.replace(/\\r/g, '\r')
-    }
-
-    // Add to object
-    obj[key] = value
-  }
-
-  return obj
-}
-
-function _log (message) {
-  console.log(`[dotenv@${version}][DEBUG] ${message}`)
-}
-
-function _resolveHome (envPath) {
-  return envPath[0] === '~' ? path.join(os.homedir(), envPath.slice(1)) : envPath
-}
-
-// Populates process.env from .env file
-function config (options) {
-  let dotenvPath = path.resolve(process.cwd(), '.env')
-  let encoding = 'utf8'
-  const debug = Boolean(options && options.debug)
-  const override = Boolean(options && options.override)
-
-  if (options) {
-    if (options.path != null) {
-      dotenvPath = _resolveHome(options.path)
-    }
-    if (options.encoding != null) {
-      encoding = options.encoding
-    }
-  }
-
-  try {
-    // Specifying an encoding returns a string instead of a buffer
-    const parsed = DotenvModule.parse(fs.readFileSync(dotenvPath, { encoding }))
-
-    Object.keys(parsed).forEach(function (key) {
-      if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-        process.env[key] = parsed[key]
-      } else {
-        if (override === true) {
-          process.env[key] = parsed[key]
-        }
-
-        if (debug) {
-          if (override === true) {
-            _log(`"${key}" is already defined in \`process.env\` and WAS overwritten`)
-          } else {
-            _log(`"${key}" is already defined in \`process.env\` and was NOT overwritten`)
-          }
-        }
-      }
-    })
-
-    return { parsed }
-  } catch (e) {
-    if (debug) {
-      _log(`Failed to load ${dotenvPath} ${e.message}`)
-    }
-
-    return { error: e }
-  }
-}
-
-const DotenvModule = {
-  config,
-  parse
-}
-
-module.exports.config = DotenvModule.config
-module.exports.parse = DotenvModule.parse
-module.exports = DotenvModule
-
-
-/***/ }),
-
 /***/ 1728:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -14660,8 +14541,6 @@ exports.cwd = void 0;
  */
 // https://github.com/actions/toolkit/tree/main/packages/core
 const core = __importStar(__nccwpck_require__(2186));
-const dotenv_1 = __nccwpck_require__(2437);
-(0, dotenv_1.config)();
 /**
  * Constants and Input/Env Processing
  */
@@ -14671,16 +14550,11 @@ const areTesting = process.env.NODE_ENV === 'test';
 // GitHub
 const fullRepoName = process.env.GITHUB_REPOSITORY || 'foxcorp/generate-github-app-token';
 const [owner, repo] = fullRepoName.split('/');
-let appPrivateKeyInput = core.getInput('application_private_key') || '';
-let appId = core.getInput('application_id') || '';
-const isGitHubActions = process.env.GITHUB_ACTIONS || false;
+const isGitHubActions = 'GITHUB_ACTIONS' in process.env;
+const appPrivateKeyInput = core.getInput('application_private_key', { required: isGitHubActions }) || '';
+const appId = core.getInput('application_id', { required: isGitHubActions }) || '';
 if (areTesting) {
     process.env.GITHUB_ACTION = 'true';
-}
-// Defaults only for testing
-if (!isGitHubActions && areTesting) {
-    appPrivateKeyInput = process.env.APP_PRIVATE_KEY || '';
-    appId = process.env.APP_ID || '123';
 }
 /**
  * Export
@@ -14745,6 +14619,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.run = void 0;
 const auth_app_1 = __nccwpck_require__(7541);
 const constants_1 = __importDefault(__nccwpck_require__(9042));
 const utils_1 = __nccwpck_require__(1314);
@@ -14772,10 +14647,16 @@ async function run() {
         core.info('Successfully generated a token! It has been saved as the output "token"');
         core.setOutput('token', token);
     }
-    catch (err) {
-        (0, utils_1.failAndExit)('Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.');
+    catch (error) {
+        let errorMessage = 'Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.';
+        if (error instanceof Error) {
+            errorMessage += error.message;
+        }
+        (0, utils_1.failAndExit)(errorMessage);
+        throw new Error(errorMessage);
     }
 }
+exports.run = run;
 run();
 
 
@@ -14950,14 +14831,6 @@ module.exports = require("util");
 
 "use strict";
 module.exports = require("zlib");
-
-/***/ }),
-
-/***/ 9968:
-/***/ ((module) => {
-
-"use strict";
-module.exports = JSON.parse('{"name":"dotenv","version":"16.0.3","description":"Loads environment variables from .env file","main":"lib/main.js","types":"lib/main.d.ts","exports":{".":{"require":"./lib/main.js","types":"./lib/main.d.ts","default":"./lib/main.js"},"./config":"./config.js","./config.js":"./config.js","./lib/env-options":"./lib/env-options.js","./lib/env-options.js":"./lib/env-options.js","./lib/cli-options":"./lib/cli-options.js","./lib/cli-options.js":"./lib/cli-options.js","./package.json":"./package.json"},"scripts":{"dts-check":"tsc --project tests/types/tsconfig.json","lint":"standard","lint-readme":"standard-markdown","pretest":"npm run lint && npm run dts-check","test":"tap tests/*.js --100 -Rspec","prerelease":"npm test","release":"standard-version"},"repository":{"type":"git","url":"git://github.com/motdotla/dotenv.git"},"keywords":["dotenv","env",".env","environment","variables","config","settings"],"readmeFilename":"README.md","license":"BSD-2-Clause","devDependencies":{"@types/node":"^17.0.9","decache":"^4.6.1","dtslint":"^3.7.0","sinon":"^12.0.1","standard":"^16.0.4","standard-markdown":"^7.1.0","standard-version":"^9.3.2","tap":"^15.1.6","tar":"^6.1.11","typescript":"^4.5.4"},"engines":{"node":">=12"}}');
 
 /***/ }),
 

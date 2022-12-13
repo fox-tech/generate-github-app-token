@@ -10,15 +10,14 @@ import * as core from '@actions/core'
 
 // General
 export const cwd = process.cwd()
-const areTesting = process.env.NODE_ENV === 'test'
 
 // GitHub
 const fullRepoName = process.env.GITHUB_REPOSITORY || 'foxcorp/generate-github-app-token'
 const [owner, repo] = fullRepoName.split('/')
 const isGitHubActions = 'GITHUB_ACTIONS' in process.env
 
-const appPrivateKeyInput: string = core.getInput('application_private_key', {required: !areTesting}) || ''
-const appId: string = core.getInput('application_id', {required: !areTesting}) || ''
+const appPrivateKeyInput: string = core.getInput('application_private_key', {required: true})
+const appId: string = core.getInput('application_id', {required: true})
 
 /**
  * Export

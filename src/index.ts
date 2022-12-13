@@ -1,9 +1,9 @@
 import {createAppAuth} from '@octokit/auth-app'
 
 import constants from './constants'
+const {core, appPrivateKeyInput, appId} = constants
 import {failAndExit} from './utils'
 import {decodePrivateKey} from './decodePrivateKey'
-const {core, appPrivateKeyInput, appId} = constants
 
 // https://github.com/JasonEtco/actions-toolkit
 export async function run(): Promise<void> {
@@ -32,6 +32,7 @@ export async function run(): Promise<void> {
 
     core.info('Successfully generated a token! It has been saved as the output "token"')
     core.setOutput('token', token)
+    return Promise.resolve()
   } catch (error) {
     let errorMessage =
       'Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.'
@@ -39,7 +40,7 @@ export async function run(): Promise<void> {
       errorMessage += error.message
     }
     failAndExit(errorMessage)
-    throw new Error(errorMessage)
+    return Promise.reject(new Error(errorMessage))
   }
 }
 

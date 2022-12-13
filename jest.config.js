@@ -8,5 +8,5 @@ module.exports = {
   },
   transformIgnorePatterns: ['^.+\\.js$'],
   verbose: false,
-  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
 }

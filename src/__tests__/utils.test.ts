@@ -29,9 +29,9 @@ describe('Verify failAndExit', () => {
 })
 
 describe('Verify the ability to wait', () => {
-  it('Can wait 1 second', async () => {
+  it('Can wait 10 ms', async () => {
     const currentTimestamp = Date.now()
-    const waitTime = 1000
+    const waitTime = 10
     await expect(wait(waitTime)).resolves.not.toThrow()
     expect(Date.now()).toBeGreaterThanOrEqual(currentTimestamp + waitTime)
   })

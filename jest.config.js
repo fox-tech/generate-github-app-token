@@ -7,6 +7,6 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest',
   },
   transformIgnorePatterns: ['^.+\\.js$'],
-  verbose: true,
+  verbose: false,
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.js'],
 }

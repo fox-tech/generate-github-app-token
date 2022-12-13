@@ -1,6 +1,6 @@
 # Fox Tech Generate GitHub App Token
 
-## Version `1.0.0-beta1`
+## Version `1.x`
 
 ## Description
 

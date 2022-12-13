@@ -14546,16 +14546,12 @@ const core = __importStar(__nccwpck_require__(2186));
  */
 // General
 exports.cwd = process.cwd();
-const areTesting = process.env.NODE_ENV === 'test';
 // GitHub
 const fullRepoName = process.env.GITHUB_REPOSITORY || 'foxcorp/generate-github-app-token';
 const [owner, repo] = fullRepoName.split('/');
 const isGitHubActions = 'GITHUB_ACTIONS' in process.env;
-const appPrivateKeyInput = core.getInput('application_private_key', { required: isGitHubActions }) || '';
-const appId = core.getInput('application_id', { required: isGitHubActions }) || '';
-if (areTesting) {
-    process.env.GITHUB_ACTION = 'true';
-}
+const appPrivateKeyInput = core.getInput('application_private_key', { required: true });
+const appId = core.getInput('application_id', { required: true });
 /**
  * Export
  */
@@ -14622,9 +14618,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.run = void 0;
 const auth_app_1 = __nccwpck_require__(7541);
 const constants_1 = __importDefault(__nccwpck_require__(9042));
+const { core, appPrivateKeyInput, appId } = constants_1.default;
 const utils_1 = __nccwpck_require__(1314);
 const decodePrivateKey_1 = __nccwpck_require__(5969);
-const { core, appPrivateKeyInput, appId } = constants_1.default;
 // https://github.com/JasonEtco/actions-toolkit
 async function run() {
     let token = '';
@@ -14646,6 +14642,7 @@ async function run() {
         core.setSecret(token);
         core.info('Successfully generated a token! It has been saved as the output "token"');
         core.setOutput('token', token);
+        return Promise.resolve();
     }
     catch (error) {
         let errorMessage = 'Something went wrong processing the "application_private_key" input. Please ensure it is a base64 encoded version of the application private key PEM file content.';
@@ -14653,7 +14650,7 @@ async function run() {
             errorMessage += error.message;
         }
         (0, utils_1.failAndExit)(errorMessage);
-        throw new Error(errorMessage);
+        return Promise.reject(new Error(errorMessage));
     }
 }
 exports.run = run;

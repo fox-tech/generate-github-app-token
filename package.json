@@ -24,8 +24,7 @@
   "homepage": "https://github.com/foxcorp/generate-github-app-token#readme",
   "dependencies": {
     "@actions/core": "^1.10.0",
-    "@octokit/auth-app": "^4.0.7",
-    "dotenv": "^16.0.3"
+    "@octokit/auth-app": "^4.0.7"
   },
   "devDependencies": {
     "@types/jest": "^29.2.4",

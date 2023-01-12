@@ -1,6 +1,6 @@
 {
   "name": "@foxcorp/generate-github-app-token",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A custom GitHub Action to generate a GitHub app token.",
   "main": "dist/index.js",
   "scripts": {

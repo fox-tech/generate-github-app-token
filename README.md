@@ -24,7 +24,7 @@ A custom GitHub Action to [generate a GitHub app token](https://docs.github.com/
 ## Outputs
 
 | Name | Description | Notes |
-|---|---|
+|---|---|---|
 | `token` | The generated JSON Web Token (JWT) | Always set |
 | `installation_access_token` | The generated installation access token | Only set if the `installation_id` input is passed |
 | `installation_access_token_expires_at` | The expiration of the installation access | Only set if the `installation_id` input is passed |

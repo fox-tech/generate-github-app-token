@@ -7,9 +7,17 @@ inputs:
   application_id:
     description: 'The GitHub App ID.'
     required: true
+  installation_id:
+    description: 'ID of the app installation to authenticate for.'
+    required: false
+    default: ''
 outputs:
   token:
     description: 'The generated JSON Web Token (JWT)'
+  # installation_token:
+  #   description: 'The installation access token'
+  # installation_token_expires_at:
+  #   description: 'The expiration of the installation access token'
 runs:
   using: node16
   main: 'dist/index.js'

@@ -1,7 +1,8 @@
+// https://github.com/actions/toolkit/tree/main/packages/core
+import * as core from '@actions/core'
+
 import {Buffer} from 'node:buffer'
-import constants from './constants'
 import {failAndExit} from './utils'
-const {core} = constants
 
 export function decodePrivateKey(privateKeyBase64: string): string {
   let appPrivateKey = ''

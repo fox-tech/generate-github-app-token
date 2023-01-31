@@ -2133,7 +2133,7 @@ async function sendRequestWithRetries(state, request, options, createdAt, retrie
   }
 }
 
-const VERSION = "4.0.8";
+const VERSION = "4.0.9";
 
 function createAppAuth(options) {
   if (!options.appId) {

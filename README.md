@@ -43,6 +43,8 @@ jobs:
         with:
           # A base64 encoded version of the PEM file contents
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
+          # The application ID
+          application_id: '4321'
           # The application installation ID
           installation_id: '1234'
 

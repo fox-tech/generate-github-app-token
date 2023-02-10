@@ -33,7 +33,7 @@ A custom GitHub Action to [generate a GitHub app token](https://docs.github.com/
 
 ```yml
 jobs:
-  get-temp-token:
+  clone-a-different-repo:
     runs-on: ubuntu-latest
 
     steps:
@@ -44,11 +44,17 @@ jobs:
           # A base64 encoded version of the PEM file contents
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
           # The application ID
-          application_id: '4321'
+          application_id: ${{ secrets.APPLICATION_ID }}
           # The application installation ID
-          installation_id: '1234'
+          installation_id: ${{ secrets.APPLICATION_INSTALLATION_ID }}
 
-      # Use ${{ steps.generate_github_app_token.outputs.token }} or ${{ steps.generate_github_app_token.outputs.installation_access_token }} in other steps as needed
+      # You can now use ${{ steps.generate_github_app_token.outputs.token }} or ${{ steps.generate_github_app_token.outputs.installation_access_token }} in other steps as needed
+
+      - name: Clone a repository besides the current one
+        shell: bash
+        # https://docs.github.com/en/developers/apps/building-github-apps/authenticating-with-github-apps#http-based-git-access-by-an-installation
+        run: |
+          git clone https://x-access-token:${{ steps.generate_github_app_token.outputs.installation_token }}@github.com/org/repo.git
 ```
 
 ## License Notice

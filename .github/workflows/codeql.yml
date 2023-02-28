@@ -1,18 +1,13 @@
 name: "CodeQL Scan"
 
 on:
-  #push:
-  #  branches: [ "master" ]
-  #pull_request:
-  #  # The branches below must be a subset of the branches above
-  #  branches: [ "master" ]
-  schedule:
-    - cron: '5 20 * * 0,2,4'
+  pull_request:
+   branches: [ "v1" ]
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: infosec-codeql
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read

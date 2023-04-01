@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Generate GitHub App Token
         id: generate_github_app_token
-        uses: foxcorp/generate-github-app-token@v1
+        uses: fox-tech/generate-github-app-token@v1
         with:
           # A base64 encoded version of the PEM file contents
           application_private_key: ${{ secrets.APPLICATION_PRIVATE_KEY }}
